@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% load static %}
+</head>
+<body>
+  {% block content %}
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  {% if user.is_authenticated %}
+    <br>
+    <br>
+    <div class="account container">
+      <h2 class="text-center"><b>ACCOUNTS</b></h2>
+        <button id="link-button" class="btn btn-success" ><b>LINK ACCOUNTS</b></button>
+        {% if accounts %}
+        <table>
+          <tr style="border: 4px solid black;">
+            <th style="border: 4px solid black;">ACCOUNT NAME</th>
+            <th style="border: 4px solid black;">AMOUNT</th>
+          </tr>
+          {% for account in accounts %}
+          <tr style="border: 4px solid black;">
+            <td style="border: 4px solid black;">{{account.official_name}}</td>
+            <td style="border: 4px solid black;">{{account.balances.current}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %} {% if error %}
+        <p>{{ error.display_message }}</p>
+        {% endif %}
+        {% endif %}
+        <br><br>
+      <a class="refresh btn btn-warning" href="{% url 'solve:refresh-accounts' %}"><b>REFRESH ACCOUNTS</b></a>
+    </div>
+
+    <div class="account container">
+      <h2 class="text-center">TRANSACTIONS</h2>
+      <br>
+      {% if latest_transactions %}
+      <table>
+        <tr style="border: 4px solid black;">
+          <th style="border: 4px solid black;">DATE</th>
+          <th style="border: 4px solid black;">NAME</th>
+          <th style="border: 4px solid black;">AMOUNT</th>
+          <th style="border: 4px solid black;">ACCOUNT</th>
+        </tr>
+        {% for transaction in latest_transactions %}
+        <tr style="border: 4px solid black;">
+          <td style="border: 4px solid black;">{{transaction.date}}</td>
+          <td style="border: 4px solid black;">{{transaction.name}}</td>
+          <td style="border: 4px solid black;">{{transaction.amount}}</td>
+          <td style="border: 4px solid black;">{{transaction.account.official_name}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      <br>
+      <a class="btn btn-warning" href="{% url 'solve:transactions' %}"><b>ALL TRANSACTIONS</b></a>
+      <a class="btn btn-warning" href="{% url 'solve:get-transactions' %}"><b>REFRESH TRANSACTIONS</b></a>
+      {% else %} {% if error %}
+      <p>{{ error.display_message }}</p>
+      {% endif %}
+      {% if not accounts %}
+        <p class="text-center">LINK ACCOUNT FOR TRANSACTIONS</p>
+      {% else %}
+        <br>
+        <a class="btn btn-warning" href="{% url 'solve:get-transactions' %}"><b>REFRESH TRANSACTIONS</b></a>
+      {% endif %}
+      {% endif %}
+    </div>
+  {% else %}
+  <h1 class="text-center"><b>WELCOME</b></h1>
+  <br>
+  <p class="text-center">Get all your transactions from any account of any bank at one place!</p>
+  {% endif %}
+  <script src="{% static 'solve/plaid.js' %}"></script>
+  {% endblock %}
+</body>

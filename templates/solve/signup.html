@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  {% block content %}
+  {% load static %}
+  {% if not user.is_authenticated %}
+  <div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Register</h5>
+                    <form action="{% url 'solve:create-user' %}" method="POST" class="validated-form" novalidate>
+                      {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="form-label" for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" autofocus required>
+                            <div class="valid-feedback">
+                                Looks Good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="form-label" for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            <div class="valid-feedback">
+                                Looks Good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="form-label" for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="valid-feedback">
+                                Looks Good!
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  {% else %}
+  <h1 class="text-center">Invalid Url!</h1>
+  <h2 class="text-center">You are already Logged In.</h2>
+  <h2 class="text-center"><a href="{% url 'solve:index' %}">Click Here For Home Page.</a> </h2>
+  {% endif %}
+  {% endblock %}
+</body>
+
+
+
+  
+
